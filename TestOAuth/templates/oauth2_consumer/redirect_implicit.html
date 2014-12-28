@@ -1,0 +1,13 @@
+<form method="POST" id="form_access_token">
+    {% csrf_token %}
+    <input type="hidden" id="input_postback_value" name="postback_value" value="" />
+</form>
+<script type="text/javascript">
+    var loc = document.location.toString();
+    var idxFragment = loc.indexOf("#");
+    var fragment = loc.slice(idxFragment + 1);
+    var input = document.getElementById("input_postback_value");
+    input.value = fragment;
+    var form = document.getElementById("form_access_token");
+    form.submit();
+</script>
