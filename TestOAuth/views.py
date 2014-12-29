@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.views.generic import View
 from django.views.generic import TemplateView
 from urllib.parse import parse_qs
 from pprint import pformat
@@ -17,3 +18,10 @@ class OAuth2ConsumerRedirectImplicitView(TemplateView):
         postback_value = request.POST.get('postback_value')
         postback_dict = parse_qs(postback_value)
         return HttpResponse('<pre>postback_dict (values URL decoded):\n\n{}</pre>'.format(pformat(postback_dict)))
+
+
+class OAuth2ConsumerRedirectAuthorizationCodeView(View):
+    def get(self, request, app_id):
+        code = request.GET.get('code')
+        html = 'app_id: {}, code: {}'.format(app_id, code)
+        return HttpResponse(html)

@@ -8,26 +8,38 @@ They are specified in ```TestOAuth/urls.py``` and prefixed with
 implementation is simple, you might need to write more code to make it
 more useful.
 
-Testing OAuth2
---------------
+Authorization Grant Types
+-------------------------
+Quick overview:
+- Implicit: For web apps and mobile apps. Client Secret confidentiality can't be maintained.
+- Authorization Code: For server side web apps. Client Secret confidentiality can be maintained.
+
+Testing OAuth2 - Implicit
+-------------------------
 1. Start Django server
 
-        manage.py runserver
+        ./manage.py runserver
+
 2. Add new application for OAuth. Go to http://127.0.0.1:8000/oauth2/applications/
   - Client type: public
   - Authorization Grant Type: implicit
   - Redirect URI: http://127.0.0.1:8000/oauth2-consumer/redirect-implicit/
 3. Request OAuth authorization for the new app. Go to the following URL in
    your web browser, you will need to login, and you will need to URL encode
-   the CLIENT_ID:
-
-        http://127.0.0.1:8000/oauth2/authorize/?response_type=token&client_id=CLIENT_ID
+   the CLIENT_ID: http://127.0.0.1:8000/oauth2/authorize/?response_type=token&client_id=CLIENT_ID
   - Encode your CLIENT_ID with this: http://meyerweb.com/eric/tools/dencoder/
 4. If all goes well, you will be redirected back to the registered
    Redirect URI with the access token, which is part of the URL fragment.
 5. Since its passed back as a URL fragment, you will need to deal with
    using Javascript.
-   There is a sample implementation ```OAuth2ConsumerRedirectImplicitView``` in ```TestOAuth/views.py``` file.
+   There is a sample implementation: ```OAuth2ConsumerRedirectImplicitView``` in ```TestOAuth/views.py``` file.
+
+Testing OAuth2 - Authorization Code
+-----------------------------------
+1. Follow the similar steps are above, but change the following:
+  - Redirect URI: http://127.0.0.1:8000/oauth2-consumer/redirect-authorization-code/
+  - Use this URL to request OAuth authorization: http://127.0.0.1:8000/oauth2/authorize/?response_type=code&client_id=CLIENT_ID
+2. The sample implementation is: ```OAuth2ConsumerRedirectAuthorizationCodeView``` in ```TestOAuth/views.py``` file.
 
 Read up on OAuth2
 -----------------
