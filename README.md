@@ -12,7 +12,7 @@ Authorization Grant Types
 -------------------------
 Quick overview:
 - Implicit: For web apps and mobile apps. Client Secret confidentiality can't be maintained.
-- Authorization Code: For server side web apps. Client Secret confidentiality can be maintained.
+- Authorization Code: For server side web apps. Client Secret confidentiality can be maintained. Able to use Refresh Token.
 
 Testing OAuth2 - Implicit
 -------------------------
@@ -38,15 +38,14 @@ Testing OAuth2 - Implicit
 Testing OAuth2 - Authorization Code
 -----------------------------------
 1. Follow the similar steps are above, but change the following:
-  - Redirect URI: http://127.0.0.1:8000/oauth2-consumer/redirect-authorization-code/<APP_ID>/
+  - Redirect URI: http://127.0.0.1:8000/oauth2-consumer/redirect-authorization-code/APP_ID/
     - Replace APP_ID with the id (primary key) of the application object
   - Use this URL to request OAuth authorization: http://127.0.0.1:8000/oauth2/authorize/?response_type=code&client_id=CLIENT_ID
 2. The sample implementation is: ```OAuth2ConsumerRedirectAuthorizationCodeView```
    in ```TestOAuth/views.py``` file.
-3. The difference in the flow is the consumer will get the Authorization
-   Code first and use that to get the Access Token. And with this method we
-   can use Refresh Token to get new Access Token. For Implicit grant type,
-   we can't do Refresh Token.
+3. The difference in the flow is we will get the Authorization Code first
+   and use that to get the Access Token. We can use Refresh Token to get
+   new Access Token. For Implicit grant type, we can't use Refresh Token.
 
 Read up on OAuth2
 -----------------
