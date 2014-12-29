@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views.generic import View
-from oauth2_provider.models import Application
+from oauth2_provider.models import Application, AccessToken
 from oauth2_provider.views.generic import ProtectedResourceView
 
 
@@ -22,7 +22,10 @@ def profile(request):
 #######
 class ApiHelloWorld(ProtectedResourceView):
     def get(self, request):
-        return HttpResponse('OK hello world')
+        access_token = AccessToken.objects.get(
+            token=request.GET['access_token'])
+        return HttpResponse(
+            'OK hello world, user_id: {}'.format(access_token.user_id))
 
 
 ###################
