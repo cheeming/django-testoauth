@@ -9,12 +9,27 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views.generic import View
 from oauth2_provider.models import Application
+from oauth2_provider.views.generic import ProtectedResourceView
 
 
 @login_required
 def profile(request):
     return HttpResponse('You are logged in')
 
+
+#######
+# API #
+#######
+class ApiHelloWorld(ProtectedResourceView):
+    def get(self, request):
+        return HttpResponse('OK hello world')
+
+
+###################
+# OAuth2 Consumer #
+###################
+# Normally this would be in another server,
+# implemented by the API consumer
 
 class OAuth2ConsumerRedirectImplicitView(TemplateView):
     template_name = 'oauth2_consumer/redirect_implicit.html'

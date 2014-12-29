@@ -8,11 +8,13 @@ They are specified in ```TestOAuth/urls.py``` and prefixed with
 implementation is simple, you might need to write more code to make it
 more useful.
 
+
 Authorization Grant Types
 -------------------------
 Quick overview:
 - Implicit: For web apps and mobile apps. Client Secret confidentiality can't be maintained.
 - Authorization Code: For server side web apps. Client Secret confidentiality can be maintained. Able to use Refresh Token.
+
 
 Testing OAuth2 - Implicit
 -------------------------
@@ -35,6 +37,7 @@ Testing OAuth2 - Implicit
    There is a sample implementation: ```OAuth2ConsumerRedirectImplicitView```
    in ```TestOAuth/views.py``` file.
 
+
 Testing OAuth2 - Authorization Code
 -----------------------------------
 1. Follow the similar steps are above, but change the following:
@@ -46,6 +49,20 @@ Testing OAuth2 - Authorization Code
 3. The difference in the flow is we will get the Authorization Code first
    and use that to get the Access Token. We can use Refresh Token to get
    new Access Token. For Implicit grant type, we can't use Refresh Token.
+
+
+Testing Access Token
+--------------------
+Run the following command:
+
+    curl --verbose 'http://127.0.0.1:8000/api/hello-world/'
+
+You should see HTTP Status 403. So add the access token and try again:
+
+    curl --verbose 'http://127.0.0.1:8000/api/hello-world/?access_token=ACCESS_TOKEN'
+
+You should see HTTP Status 200 and the response of the API.
+
 
 Read up on OAuth2
 -----------------
