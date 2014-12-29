@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     (r'^oauth2-consumer/redirect-implicit/$',
      OAuth2ConsumerRedirectImplicitView.as_view()),
 
-    (r'^oauth2-consumer/redirect-authorization-code/(?P<app_id>\d+)/$',
-     OAuth2ConsumerRedirectAuthorizationCodeView.as_view()),
+    url(r'^oauth2-consumer/redirect-authorization-code/(?P<app_id>\d+)/$',
+        OAuth2ConsumerRedirectAuthorizationCodeView.as_view(),
+        name='oauth2_consumer_redirect_authorization_code'),
 )

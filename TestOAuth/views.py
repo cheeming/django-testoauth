@@ -1,9 +1,14 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.views.generic import View
-from django.views.generic import TemplateView
-from urllib.parse import parse_qs
+from urllib.parse import urlencode, parse_qs
+from urllib.request import urlopen
 from pprint import pformat
+import json
+
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
+from django.views.generic import TemplateView
+from django.views.generic import View
+from oauth2_provider.models import Application
 
 
 @login_required
@@ -22,6 +27,24 @@ class OAuth2ConsumerRedirectImplicitView(TemplateView):
 
 class OAuth2ConsumerRedirectAuthorizationCodeView(View):
     def get(self, request, app_id):
+        # get the authorization code
         code = request.GET.get('code')
         html = 'app_id: {}, code: {}'.format(app_id, code)
+
+        app = Application.objects.get(id=app_id)
+
+        # using the authorization code, request for access token
+        params = urlencode({
+            'client_id': app.client_id,
+            'client_secret': app.client_secret,
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': 'http://127.0.0.1:8000{}'.format(reverse('oauth2_consumer_redirect_authorization_code', args=[app.id])),
+        }).encode('utf8')
+
+        access_token_str = urlopen('http://127.0.0.1:8000/oauth2/token/', params).read()
+        access_token_info = json.loads(access_token_str.decode('utf8'))
+
+        html += '<pre>access_token:\n\n{}</pre>'.format(pformat(access_token_info))
+
         return HttpResponse(html)
